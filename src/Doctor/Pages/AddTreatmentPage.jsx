@@ -1105,6 +1105,8 @@ const uploadHandlerIpr = (e) => {
     // setCurrentTab((prev) => prev + 1);
   };
 
+  const [reports, setReports] = useState([]);
+  
   
 
   const [state, setState] = useState(null);
@@ -2442,7 +2444,7 @@ useEffect(() => {
       console.log("Date "+values.DateofBirth);
       // console.log(values.PatientId);
     });
-}, []);
+}, [selectedPlan]);
 
 
 

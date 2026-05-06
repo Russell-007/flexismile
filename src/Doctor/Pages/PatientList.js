@@ -112,7 +112,7 @@ const ID=urlParams.DoctorUserId;
     }}>Edit</button>
     },
     {
-      name: "Add Treatment Plan",
+      name: "Add Plan",
       cell: row => <button className="edit-patient-btn"  onClick={() =>{ RoleId==="1"? navigate(`/add-treatment-plan/${row?.PatientId}`):navigate(`/add-treatment-plan/${row?.PatientId}`);
     console.log(patient);
     }}>Edit</button>

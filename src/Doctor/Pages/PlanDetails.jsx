@@ -31,7 +31,7 @@ import Swal from "sweetalert2";
 
 
 
-function PatientDetailsDoc(){
+function PlanDetails(){
   const [patient, setPatient] = useState([]);
   const [extra, setextra] = useState([])
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ useEffect(() => {
   fetch(url2)
     .then((res) => res.json())
     .then((vid) => {
-      console.log(vid.Data);
+      console.log("video data",vid.Data);
       setpVids(vid.Data);
       // console.log(patient);
     });
@@ -458,61 +458,77 @@ extra?.IntraOralMoreImagesList && (
 
                         }
 
-                        {
+                      </Col>
+                      
+                    </Row>
+                  </Col>
+                </Row>
+                <Row className="mt-5">
+  <Col>
+    <p className="fs-4"><b>IPR</b></p>
 
-                           pVids.find(i=>i.IsConfirm==="") && pVids.find(a=>a.PatientVideoId!=0)?
+    {
+      patient[0]?.RequiredIPR === "Yes" || patient[0]?.RequiredIPR === "" ? (
 
-                        
+        <Accordion defaultActiveKey="0">
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>View IPR</Accordion.Header>
 
+            <Accordion.Body>
 
-<Row>
-                          <Col md={2}>
-                            <Button variant="" className="btn approval-btn mx-0 mt-3 mb-3" onClick={()=>{
-                              const confUrl="https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/PatientVideoConfirmByDoctor";
-                            
-                              let obj={
-                                VideoConfirmByDoctorList:[]
-                              }
+              {reports?.length > 0 && reports.some(r => r?.PathDocuments) ? (
 
+                <div className="text-center">
+                  <object
+                    data={reports.find(r => r?.PathDocuments)?.PathDocuments}
+                    type="application/pdf"
+                    width="100%"
+                    height="500px"
+                    className="rounded border"
+                  >
+                    <p>
+                      PDF not supported.
+                      <a
+                        href={reports.find(r => r?.PathDocuments)?.PathDocuments}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Download PDF
+                      </a>
+                    </p>
+                  </object>
+                </div>
 
+              ) : (
 
-                              pVids?.map((confVid)=>{
-                                let a={
-                                  PatientVideoId:confVid?.PatientVideoId,
-                                  DoctorId:DoctorUserID
-                                }
+                <div className="text-center py-5">
+                  <p className="fs-5 text-muted">
+                    No IPR chart available/uploaded.
+                  </p>
+                </div>
 
-                                obj.VideoConfirmByDoctorList.push(a);
-                              })
-                              console.log(obj);
-                              fetch(confUrl,{
-                                method: "POST",
-                            headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(obj),
-                              })
-                              .then((res)=>res.json())
-                              .then((conf)=>{
-                                console.log("below is conf");
-                                console.log(conf);
-                                if(conf.status===true){
-                                  Swal.fire({
-                                    title:"Approved!",
-                                    icon:"success",
-                                    timer:2000,
-                                    showConfirmButton:false
-                                  })
+              )}
 
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
 
-                                  setTimeout(() => {
-                                    
-                                    window.location.reload();
-                                  }, 2000);
-                                }
-                              })
-                            }}>Approve</Button>
+      ) : (
+
+        <p className="fs-5 text-muted">
+          IPR is not required for this patient.
+        </p>
+
+      )
+    }
+
+  </Col>
+</Row>
+
+                <Row className="mt-5">
+                                            <Col md={2}>
+                            <Button variant="" className="btn approval-btn mx-0 mt-3 mb-3" 
+                            >Approve</Button>
                             
                             
                           </Col>
@@ -537,130 +553,7 @@ extra?.IntraOralMoreImagesList && (
                            
 
                           }}>Reject</Button>
-
-
-<Modal show={show} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                  <Modal.Title></Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form.Group
-                    className="mb-3"
-                    controlId="exampleForm.ControlInput1"
-                  >
-                    <Form.Label>Changes Needed</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      row={4}
-                      placeholder="mention here...."
-                      name="ConfirmNotes"
-                      onChange={(e) => handleVidChange(e)}
-                      // value={vidChange.ConfirmNotes}
-                      required
-                    />
-                  </Form.Group>
-                 
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button
-                    type="submit"
-                    variant=""
-                    style={{
-                      backgroundColor: "#C49358",
-                      color: "white",
-                    }}
-                    onClick={(e)=>{
-                      
-                      e.preventDefault();
-                      const rejUrl="https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/PatientVideoConfirmRejectedByDoctor";
-
-                     
-                      fetch(rejUrl,{
-                        method: "POST",
-                    headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(obj1),
-                      })
-                      .then((res)=>res.json())
-                      .then((rej)=>{
-                        console.log(rej);
-
-                        if(rej.status===true){
-                          Swal.fire({
-                            title:"Video Rejected!",
-                            icon:"success",
-                            timer:2000,
-                            showConfirmButton:false
-                          })
-
-                          setTimeout(() => {
-                            window.location.reload();
-                            
-                          }, 2000);
-                        }
-                      })
-                      console.log(obj1);
-                      
-                    }}
-                  >
-                    Submit
-                  </Button>
-                </Modal.Footer>
-              </Modal>
                           </Col>
-                        </Row>:""
-                          
-                        }
-
-                      </Col>
-                      
-                    </Row>
-                  </Col>
-                </Row>
-                <Row className="mt-5">
-                  <Col>
-                  <p className="fs-4">
-                      <b>IPR</b>
-                    </p>
-                    {/* <Stack direction="horizontal" gap={5}> */}
-                    {
-                      patient[0]?.RequiredIPR==="Yes" || patient[0]?.RequiredIPR===""?
-                      <Accordion>
-                        <Accordion.Item eventKey="0">
-                          <Accordion.Header>View IPR</Accordion.Header>
-                          <Accordion.Body>
-                            {
-                              reports[0]?.PathDocuments || reports[1]?.PathDocuments?
-                              <object data={reports[0]?.PathDocuments || reports[1]?.PathDocuments} className="obj-size">
-                                <p>Your web browser doesn't have a PDF plugin.
-                    Instead you can <a href={reports[0]?.PathDocuments}>click here to
-                    download the PDF file.</a></p>
-                    </object>:
-                    <Row className="d-flex vh-100 justify-content-center align-items-center">
-                      <Col>
-                      <p className="text-center fs-3">No IPR chart available/uploaded.</p>
-              </Col>
-            </Row>
-          }
-        </Accordion.Body>
-      </Accordion.Item>
-      </Accordion>
-      :
-      <p className="fs-4">IPR is not required for this patient.</p>
-                    }
-                      
-                      
-                    {/* </Stack> */}
-                  </Col>
-                </Row>
-
-                <Row className="mt-5">
-                  <Col>
-                      
-                    {/* </Stack> */}
-                  </Col>
                 </Row>
                
                 </Row>
@@ -671,4 +564,4 @@ extra?.IntraOralMoreImagesList && (
 }
 
          
-export default PatientDetailsDoc;
+export default PlanDetails;
