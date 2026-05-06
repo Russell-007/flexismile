@@ -1,0 +1,15 @@
+.ver-t{
+    font-size: 1.4em;
+    font-weight: 500;
+}
+
+.ver-crd{
+    box-shadow: #c49358 0px 0px 15px;
+    border-radius: 8px;
+}
+
+
+.ver-btn{
+    border:1px solid #c49358;
+    color: #c49358;
+}

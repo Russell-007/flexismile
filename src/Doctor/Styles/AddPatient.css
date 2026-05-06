@@ -1,0 +1,275 @@
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: var(--bs-nav-pills-link-active-color);
+    background-color: #C49358;
+}
+.nav-pills .nav-link {
+    background: 0 0;
+    border-radius: none;
+    background-color: #e9dfdf; 
+    border: solid 0.1em;
+    border-color: white;
+    color:#C49358;
+    border-radius: 0%;
+}
+.input-group-text {
+   border-radius: 0%;
+   height: 3em;
+   width: 3em;
+}
+.form-control {
+    border-radius: 0%;
+}
+.form-check-input:checked {
+    background-color: #C49358;
+    border-color: #C49358;
+}
+.btn
+{
+    border-radius: 0%;
+}
+
+.image-prev{
+    justify-content: center;
+    text-align: center;
+    background-size: cover;
+    
+}
+
+/* .img-crd{
+    height: 29em;
+} */
+
+/* .img-crd-in{
+max-height: 27em;
+overflow-y: scroll;
+overflow-x: hidden;
+} */
+
+.crd-up{
+    height: 8em;
+
+}
+
+.img-s{
+    /* width: 12em; */
+    max-height: -webkit-fill-available;
+    background-size: contain;
+}
+.up-rec{
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 700;
+    
+}
+
+
+.check-crd{
+    min-height: 12em;
+}
+
+.decide{
+    font-size: 14px;
+    line-height: 25px;
+    color: #077396;
+}
+.form-label {
+    font-weight:normal;
+}
+.hrline
+{
+    border: 1px solid #077396;
+}
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: solid;
+    padding-left: 2em;
+    border-width: 0;
+}
+.hrrl
+{
+    border: 1px dashed;
+    border-color: #C49358;
+
+}
+.nextbtn
+{
+    background-color: #C49358;
+    color: white;
+    border-color: white;
+}
+
+.backbtn{
+background-color: transparent;
+color: black;
+border: 1px solid black;
+}
+
+.nextbtn:hover {
+   
+    background-color: white;
+    color: #C49358;
+    border-color: #C49358;
+}
+
+.image {
+    margin: 1rem 0.5rem;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+  }
+
+ 
+.nav-link:focus, .nav-link:hover {
+    color:#C49358;
+
+    
+}
+
+
+
+.crd-up2{
+ height: 25em;   
+}
+
+
+.img-s2{
+    max-width: -webkit-fill-available;
+    background-size: contain;
+}
+
+
+.thirdTabSubmit{
+    background-color: #077396;
+    color: white;
+}
+
+.seventhTabSubmit{
+    background-color: #077396;
+    color: white;
+}
+body{
+    overflow-x: hidden;
+    background-color: #f8f3ec;
+}
+
+.navb{
+    background-color: #ebdbc6;
+}
+.menuTab {
+ 
+    box-shadow: 0px 3px 16px rgb(0 0 0 / 0.1);
+    
+    width: 100vw;
+    background: #ffffff;
+    height: 8vh;        
+    overflow-y: hidden;
+    overflow-x: hidden;
+    transition: 0.3s all ease;
+   
+}
+.menuTab.collapsed {
+    height: 0;
+}
+
+.btn{
+    --bs-btn-focus-box-shadow: 0 0 0 0.25rem transparent, .5;
+}
+
+.user{
+    color: #C49358;
+}
+
+.p-crd{
+    box-shadow: 0 0 20px rgba(165, 174, 177, 0.25);
+}
+
+.doc-tab{
+    float: right;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.doc-tab:focus{
+   border-bottom: 2px solid #077396;
+   border-bottom-left-radius: 0px;
+   border-bottom-right-radius: 0px;
+   transition: 0.1s border-bottom ease-in;
+   color: black;
+}
+
+.prof-tab{
+    float: left;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    font-size: 18px;
+
+
+}
+
+.prof-tab:focus{
+    border-bottom: 2px solid #077396;
+   border-bottom-left-radius: 0px;
+   border-bottom-right-radius: 0px;
+   transition: 0.2s border-bottom ease;
+   
+}
+
+.doc-signup{
+    background-color: #C49358;
+    color: white;
+    border-radius: 10em !important;
+    padding: 0.5em 1.5em;
+}
+
+.form-label{
+    font-weight: 500;
+}
+
+.add-t{
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.nav-justified .nav-item{
+    flex-basis: content !important;
+}
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 991px) {
+    .navhide
+    {
+        visibility: hidden;
+    }
+    .notification
+    {
+        margin-top: -80px;
+    }
+    .address
+    {
+        margin-top: -40px;
+    }
+}
+.edit-patient-btn {
+    /* background-color: #C49358; */
+    color: #C49358;
+    text-decoration: none;
+    border: 0;
+    background-color: transparent;
+    /* border-color: white; */
+}
+.nav-tabs .nav-link {
+    color: #C49358;
+    background-color: rgb(0 0 0 / 13%);
+    border-color: white;
+}
+.nav-tabs .nav-link.active {
+    color: #f8f9fa;
+    background-color: #c49358;
+    border-color: white;
+}
+
+.form-label {
+    font-weight:normal !important;
+}

@@ -1,0 +1,22 @@
+.sup-btn{
+    background-color: #077396;
+    color: white;
+    border-radius: 7em;
+    padding: 0.7em 1.8em;
+}
+
+.sup-btn:focus{
+    background-color: #077396;
+    color: white;
+}
+
+.acc-btn{
+    text-decoration: none;
+    color: black;
+}
+
+.log-text{
+    font-size: 30px;
+    font-weight: 500;
+    color: #077396;
+}

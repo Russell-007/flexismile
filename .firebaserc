@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "hobyjoby-8b9ca"
+  },
+  "targets": {
+    "hobyjoby-8b9ca": {
+      "hosting": {
+        "flexismile": [
+          "flexismile.web.app"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

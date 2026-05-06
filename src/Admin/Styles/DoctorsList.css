@@ -1,0 +1,40 @@
+/* body{
+    counter-reset: my-sec-counter;
+} */
+
+.add-doc-btn{
+    background-color: #C49358;
+    color: white;
+}
+
+.exc {
+    background-color: #C49358;
+    color: white;
+    border: none;
+    padding: 0.5em 2em;
+}
+
+
+.action-i{
+    background-color: transparent !important;
+    color: black !important;
+
+}
+
+.stat-green{
+    color: green !important;
+}
+
+.stat-red{
+    color: red !important;
+}
+
+.dList{
+    height: 100vh !important;
+    overflow-y: scroll !important;
+}
+
+/* .incr{
+    counter-increment: my-sec-counter;
+  content: counter(my-sec-counter)
+} */

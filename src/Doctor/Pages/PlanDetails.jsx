@@ -1,0 +1,674 @@
+import React,{useState,useEffect} from "react";
+import {
+    Container,
+    Row,
+    Col,
+    Nav,
+    Button,
+    Navbar,
+    Dropdown,
+    Card,
+    Modal,
+    Form,
+    Accordion,
+    Stack
+  } from "react-bootstrap";
+import user from "../../Assets/user.png";
+// import user from "../../Assets/user.png";
+import { CgProfile } from "react-icons/cg";
+import { useNavigate } from "react-router-dom";
+import "../Styles/PatientDetails.css"
+
+import logo from "../../Assets/Logoremovebg.png";
+import { IoMdNotifications } from "react-icons/io";
+import { FiMessageSquare, FiPower } from "react-icons/fi";
+import { FaBars,FaEdit } from "react-icons/fa";
+import $ from "jquery";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+
+
+
+
+function PatientDetailsDoc(){
+  const [patient, setPatient] = useState([]);
+  const [extra, setextra] = useState([])
+  const navigate = useNavigate();
+  const urlParams = useParams()
+
+
+  const [videoData, setvideoData] = useState([])
+console.log(urlParams);
+const ID=urlParams.PatientId;
+  const url ="https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/GetPatientAllList/"+ID;
+
+useEffect(() => {
+  console.log(urlParams);
+  fetch(url)
+    .then((res) => res.json())
+    .then((det) => {
+      console.log(det.Data);
+      setPatient(det.Data);
+      setvideoData(det?.PatientVideoList)
+      setextra(det)
+      console.log(patient);
+    });
+}, []);
+
+
+
+const [pVids, setpVids] = useState([])
+
+const url2="https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/GetPatientVideo/"+ID
+
+
+useEffect(() => {
+  console.log(urlParams);
+  fetch(url2)
+    .then((res) => res.json())
+    .then((vid) => {
+      console.log(vid.Data);
+      setpVids(vid.Data);
+      // console.log(patient);
+    });
+}, []);
+
+
+
+
+const tglContent = () => {
+    let Menu = document.querySelector(".menuTab");
+
+    if (Menu.classList.contains("collapsed")) {
+      Menu.classList.remove("collapsed");
+    } else {
+      Menu.classList.add("collapsed");
+    }
+  };
+  $(document).ready(function () {
+    $(".editbtn").click(function () {
+      var currentTD = $(this).parents("tr").find("td");
+      if ($(this).html() == "Edit") {
+        currentTD = $(this).parents("tr").find("td");
+        $.each(currentTD, function () {
+          $(this).prop("contenteditable", true);
+          $(this).parents("tr").find("td").focus();
+        });
+      } else {
+        $.each(currentTD, function () {
+          $(this).prop("contenteditable", false);
+        });
+      }
+
+      $(this).html($(this).html() == "Edit" ? "Save" : "Edit");
+    });
+  });
+
+
+
+  let DoctorName=sessionStorage.getItem("DocPracName");
+  let DoctorUserID=sessionStorage.getItem("DocUserId")
+
+
+  const [reports, setReports] = useState([]);
+
+  const repurl="https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/GetPatientDocuments/"+ID;
+
+  useEffect(() => {
+    console.log(urlParams);
+    fetch(repurl)
+      .then((res) => res.json())
+      .then((reports) => {
+        console.log(reports.Data);
+        setReports(reports.Data);
+        // console.log(patient);
+      });
+  }, []);
+
+
+  const [vidChange, setVidChange] = useState({
+    PatientVideoId:"",
+    DoctorId:"",
+    ConfirmNotes:""
+  })
+
+  const [cNotes, setcNotes] = useState("");
+
+
+
+  // let cnotes=sessionStorage.getItem("ConfirmNotes");
+
+//   useEffect(()=>{
+// console.log("cnotes below");
+// console.log(cnotes);
+//   },[cnotes])
+
+let obj1={
+  VideoConfirmRejected:[]
+}
+  pVids?.map((rejVid)=>{
+    let a={
+      PatientVideoId:rejVid?.PatientVideoId,
+      DoctorId:DoctorUserID,
+      ConfirmNotes:cNotes
+    }
+
+    obj1.VideoConfirmRejected.push(a);
+  })
+  // console.log(obj1);
+
+
+  const handleVidChange=(e)=>{
+    // setVidChange((pre)=>{
+    //   return{
+    //     ...pre,
+    //     ConfirmNotes:e.target.value
+    //   }
+    // });
+
+    let a=e.target.value;
+    // sessionStorage.setItem("ConfirmNotes",a);
+    setcNotes(a);
+
+    
+    
+
+    
+    console.log(obj1);
+  }
+  
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
+
+
+  
+
+  // if(pVids.length<1){
+  //   document.getElementById("vid-rId").style.height="100px"
+  // }
+
+
+  
+
+    return(
+        <>
+<Container fluid>
+  <Row className="justify-content-center">
+    <Col md={10}>
+      <Row
+        className="mt-5 mb-5 p-5"
+        style={{
+          backgroundColor: "white",
+          boxShadow: "0px 0px 15px  #C49358",
+          borderRadius: "8px",
+        }}
+      >
+        <Row className="mt-4">
+          <Col md={4}>
+            <Form.Group>
+              <Form.Label style={{fontWeight:"bold"}}>Select Plan</Form.Label>
+              <Form.Select>
+                <option>Plan 1</option>
+                <option>Plan 2</option>
+                <option>Plan 3</option>
+                <option>Plan 4</option>
+                <option>Plan 5</option>
+              </Form.Select>
+            </Form.Group>
+          </Col>
+        </Row>
+
+        {/* EXTRAORAL PHOTOS */}
+        <Row className="mt-4 mb-5">
+          <Col md={12}>
+            <p className="fs-4"><b>View Extraoral Photos</b></p>
+
+            <Row>
+              <Col md={2}>
+                <img
+                  src={patient[0]?.FrontalRepose || "http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                  className="rounded m-2"
+                  style={{ height: "100px", width: "100px" }}
+                />
+              </Col>
+
+              <Col md={2}>
+                <img
+                  src={patient[0]?.FrontalSmiling || "http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                  className="rounded m-2"
+                  style={{ height: "100px", width: "100px" }}
+                />
+              </Col>
+
+              <Col md={2}>
+                <img
+                  src={patient[0]?.ProfileRepose || "http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                  className="rounded m-2"
+                  style={{ height: "100px", width: "100px" }}
+                />
+              </Col>
+
+              <Col md={2}>
+                <img
+                  src={patient[0]?.FrontOpImage || "http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                  className="rounded m-2"
+                  style={{ height: "100px", width: "100px" }}
+                />
+              </Col>
+            </Row>
+            
+
+            {extra?.ExtraOralMoreImagesList && (
+              <Row className="mt-4">
+                {extra.ExtraOralMoreImagesList.map((e, i) => (
+                  <Col md={2} key={i}>
+                    <img
+                      src={e.ImagePath}
+                      className="rounded m-2"
+                      style={{ height: "100px", width: "100px" }}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            )}
+          </Col>
+        </Row>
+                <Row className="mt-4 mb-5">
+                  <Col md={{ span: 12 }}>
+                    <p className="fs-4">
+                      <b>View Intraoral Photos</b>
+                    </p>
+                    {/* <Stack direction="horizontal" gap={5}> */}
+                    <Row>
+                      <Col md={2}>
+                        <img
+                            src={patient[0]?.BuccalRight?patient[0]?.BuccalRight:"http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                            className="rounded m-2"
+                            style={{
+                              boxShadow: "0px 5px 5px 5px #E8E8E8",
+                              height: "100px",
+                              width: "100px",
+                            }}
+                          ></img>
+                      </Col>
+                        <Col md={2}>
+                          <img
+                            src={patient[0]?.BuccalLeft?patient[0]?.BuccalLeft:"http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                            className="rounded m-2"
+                            style={{
+                              boxShadow: "0px 5px 5px 5px #E8E8E8",
+                              height: "100px",
+                              width: "100px",
+                            }}
+                          ></img>
+                        </Col>
+                        <Col md={2}>
+                          <img
+                            src={patient[0]?.BuccalFront?patient[0]?.BuccalFront:"http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                            className="rounded m-2"
+                            style={{
+                              boxShadow: "0px 5px 5px 5px #E8E8E8",
+                              height: "100px",
+                              width: "100px",
+                            }}
+                          ></img>
+                        </Col>
+                        <Col md={2}>
+                          <img
+                            src={patient[0]?.OcclussalUpper?patient[0]?.OcclussalUpper:"http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                            className="rounded m-2"
+                            style={{
+                              boxShadow: "0px 5px 5px 5px #E8E8E8",
+                              height: "100px",
+                              width: "100px",
+                            }}
+                          ></img>
+                        </Col>
+                        <Col md={2}>
+                          <img
+                            src={patient[0]?.OcclussalLower?patient[0]?.OcclussalLower:"http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                            className="rounded m-2"
+                            style={{
+                              boxShadow: "0px 5px 5px 5px #E8E8E8",
+                              height: "100px",
+                              width: "100px",
+                            }}
+                          ></img>
+                        </Col>
+                    </Row>
+                    {/* </Stack> */}
+
+                    {
+extra?.IntraOralMoreImagesList && (
+  <Row className="mt-4">
+    {
+      extra?.IntraOralMoreImagesList.map((e,i)=>{
+        return(
+          <>
+    <Col md={2}>
+          <img
+                            src={e.ImagePath}
+                            className="rounded m-2"
+                            style={{
+                              boxShadow: "0px 5px 5px 5px #E8E8E8",
+                              height: "100px",
+                              width: "100px",
+                            }}
+                          ></img>
+    </Col>
+          </>
+        )
+      })
+    }
+  </Row>
+)
+                    }
+                  </Col>
+                </Row>
+                <Row className="mt-4 mb-5">
+                  <Col md={{ span: 12 }}>
+                    <p className="fs-4">
+                      <b>Radiographs</b>
+                    </p>
+                    <Stack direction="horizontal" gap={5}>
+                      <img
+                        src={patient[0]?.XrayLeft?patient[0]?.XrayLeft:"http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                        className="rounded"
+                        style={{
+                          boxShadow: "0px 5px 5px 5px #E8E8E8",
+                          height: "100px",
+                          width: "100px",
+                        }}
+                      ></img>
+                      <img
+                        src={patient[0]?.XrayRight?patient[0]?.XrayRight:"http://swargworld.com/wp-content/uploads/2017/01/No_image_available.jpg"}
+                        className="rounded"
+                        style={{
+                          boxShadow: "0px 5px 5px 5px #E8E8E8",
+                          height: "100px",
+                          width: "100px",
+                        }}
+                      ></img>
+                    </Stack>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col>
+                  <p className="fs-4">
+                      <b>Videos</b>{videoData[0]?.CreateDate && videoData[0]?.DoctorUploadingVideo?<span style={{fontSize:"18px"}} className="mx-2">- <u>Uploaded by {videoData[0]?.DoctorUploadingVideo} on {videoData[0]?.CreateDate.split(" ")[0]}</u>.</span>:""}
+                    </p>
+                    <Row className="vid-row2" id="vid-rId">
+                     
+                      <Col>
+                        {
+
+                          pVids.find(i=>i.PatientVideoId===0)? <Row className="d-flex vh-100 justify-content-center align-items-center">
+                          <Col>
+                          <p className="text-center fs-3">Videos are not available/uploaded.</p>
+                          </Col>
+                        </Row>:
+                        
+                          pVids?.map((item,index)=>{
+                            
+                            return(
+                              <>
+                              
+                              {<video width="320" height="240" controls className="vid-items">
+                          <source src={item?.PathVideo} type="video/mp4"/> 
+                          {/* <source src={item?.PathVideo} type="video/ogg"></source> */}
+                          
+                        </video>}
+                        <br />
+
+                          {item?.IsConfirm==="YES"?<p className="vid-status mx-5 px-5">Video Approved!</p>:""}
+
+                          {item?.IsConfirm==="No"?<p className="mx-5 px-5 vid-status2">Video Rejected!</p>:""}
+                          
+                      
+                        {/* {item?.IsConfirm==="YES"?"":<Form>
+                          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                  <Form.Label className="vid-reason">Changes Needed</Form.Label>
+                                  <Form.Control as="textarea" name="changes" row={4} onChange={handleVidChange} placeholder="mention here...." />
+                                </Form.Group>
+                                <Button variant="" className="sub-reason">Submit</Button>
+                                
+                        </Form>} */}
+
+                              </>
+                            )
+                          })
+                          
+                          
+
+                          
+
+
+
+
+                         
+
+
+
+                        }
+
+                        {
+
+                           pVids.find(i=>i.IsConfirm==="") && pVids.find(a=>a.PatientVideoId!=0)?
+
+                        
+
+
+<Row>
+                          <Col md={2}>
+                            <Button variant="" className="btn approval-btn mx-0 mt-3 mb-3" onClick={()=>{
+                              const confUrl="https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/PatientVideoConfirmByDoctor";
+                            
+                              let obj={
+                                VideoConfirmByDoctorList:[]
+                              }
+
+
+
+                              pVids?.map((confVid)=>{
+                                let a={
+                                  PatientVideoId:confVid?.PatientVideoId,
+                                  DoctorId:DoctorUserID
+                                }
+
+                                obj.VideoConfirmByDoctorList.push(a);
+                              })
+                              console.log(obj);
+                              fetch(confUrl,{
+                                method: "POST",
+                            headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(obj),
+                              })
+                              .then((res)=>res.json())
+                              .then((conf)=>{
+                                console.log("below is conf");
+                                console.log(conf);
+                                if(conf.status===true){
+                                  Swal.fire({
+                                    title:"Approved!",
+                                    icon:"success",
+                                    timer:2000,
+                                    showConfirmButton:false
+                                  })
+
+
+                                  setTimeout(() => {
+                                    
+                                    window.location.reload();
+                                  }, 2000);
+                                }
+                              })
+                            }}>Approve</Button>
+                            
+                            
+                          </Col>
+                          <Col md={2}>
+
+
+
+                         <Button variant="" className="mx-0 mt-3 mb-3 rej-btn px-4" onClick={()=>{
+                            handleShow();
+                           
+
+
+
+                           
+                            // setVidChange((pre)=>{
+                            //   return{...pre,PatientVideoId:item?.PatientVideoId,
+                            //   DoctorId:DoctorUserID
+                            //   }
+                            // })
+
+                            // console.log(vidChange);
+                           
+
+                          }}>Reject</Button>
+
+
+<Modal show={show} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Label>Changes Needed</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      row={4}
+                      placeholder="mention here...."
+                      name="ConfirmNotes"
+                      onChange={(e) => handleVidChange(e)}
+                      // value={vidChange.ConfirmNotes}
+                      required
+                    />
+                  </Form.Group>
+                 
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    type="submit"
+                    variant=""
+                    style={{
+                      backgroundColor: "#C49358",
+                      color: "white",
+                    }}
+                    onClick={(e)=>{
+                      
+                      e.preventDefault();
+                      const rejUrl="https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/PatientVideoConfirmRejectedByDoctor";
+
+                     
+                      fetch(rejUrl,{
+                        method: "POST",
+                    headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(obj1),
+                      })
+                      .then((res)=>res.json())
+                      .then((rej)=>{
+                        console.log(rej);
+
+                        if(rej.status===true){
+                          Swal.fire({
+                            title:"Video Rejected!",
+                            icon:"success",
+                            timer:2000,
+                            showConfirmButton:false
+                          })
+
+                          setTimeout(() => {
+                            window.location.reload();
+                            
+                          }, 2000);
+                        }
+                      })
+                      console.log(obj1);
+                      
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+                          </Col>
+                        </Row>:""
+                          
+                        }
+
+                      </Col>
+                      
+                    </Row>
+                  </Col>
+                </Row>
+                <Row className="mt-5">
+                  <Col>
+                  <p className="fs-4">
+                      <b>IPR</b>
+                    </p>
+                    {/* <Stack direction="horizontal" gap={5}> */}
+                    {
+                      patient[0]?.RequiredIPR==="Yes" || patient[0]?.RequiredIPR===""?
+                      <Accordion>
+                        <Accordion.Item eventKey="0">
+                          <Accordion.Header>View IPR</Accordion.Header>
+                          <Accordion.Body>
+                            {
+                              reports[0]?.PathDocuments || reports[1]?.PathDocuments?
+                              <object data={reports[0]?.PathDocuments || reports[1]?.PathDocuments} className="obj-size">
+                                <p>Your web browser doesn't have a PDF plugin.
+                    Instead you can <a href={reports[0]?.PathDocuments}>click here to
+                    download the PDF file.</a></p>
+                    </object>:
+                    <Row className="d-flex vh-100 justify-content-center align-items-center">
+                      <Col>
+                      <p className="text-center fs-3">No IPR chart available/uploaded.</p>
+              </Col>
+            </Row>
+          }
+        </Accordion.Body>
+      </Accordion.Item>
+      </Accordion>
+      :
+      <p className="fs-4">IPR is not required for this patient.</p>
+                    }
+                      
+                      
+                    {/* </Stack> */}
+                  </Col>
+                </Row>
+
+                <Row className="mt-5">
+                  <Col>
+                      
+                    {/* </Stack> */}
+                  </Col>
+                </Row>
+               
+                </Row>
+               
+                </Col></Row></Container>
+        </>
+    );
+}
+
+         
+export default PatientDetailsDoc;
