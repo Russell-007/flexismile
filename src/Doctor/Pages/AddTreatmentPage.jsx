@@ -97,9 +97,10 @@ function AddTreatmentPage(){
         RadiographsType:"",
         XrayLeft:"",
         XrayRight:"",
-        ExtraOralMoreImages:"",
-        IntraOralMoreImages:"",
+        ExtraOralMoreImages:[],
+        IntraOralMoreImages:[],
         PatientId:"",
+        PathVideo:"",
         Mode:"2"
         // XrayLeft: sessionStorage.getItem("XrayLeft"),
         // UploadVideo: "",
@@ -181,7 +182,7 @@ const IndividualUpload1=async ()=>{
   }
   await axios
   .post(
-    "https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/UploadPhotosNew",
+    "/FlexismileApi/FlexAlign.svc/UploadPhotosNew",
     fd,
     {
       onUploadProgress: (ProgressEvent) => {
@@ -241,7 +242,7 @@ const IndividualUpload2=async ()=>{
   }
   await axios
   .post(
-    "https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/UploadPhotosNew",
+    "/FlexismileApi/FlexAlign.svc/UploadPhotosNew",
     fd,
     {
       onUploadProgress: (ProgressEvent) => {
@@ -300,7 +301,7 @@ const IndividualUpload3=async ()=>{
   }
   await axios
   .post(
-    "https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/UploadPhotosNew",
+    "/FlexismileApi/FlexAlign.svc/UploadPhotosNew",
     fd,
     {
       onUploadProgress: (ProgressEvent) => {
@@ -875,6 +876,7 @@ const addUploadVideo = async (newarr) => {
     .then((res) => {
       console.log(res.data);
       if (res.data.status === true) {
+        setValues(pre => { return {...pre, PathVideo: newarr.VideoPath.join(',') } })
         Swal.fire({
           icon: "success",
           title: "Videos uploaded successfully!",
@@ -929,62 +931,79 @@ const onChangeIpr = (e) => {
   console.log(e.target.files[0]);
 };
 
-const uploadHandlerIpr = (e) => {
-  e.preventDefault();
-
+const uploadHandlerIpr = async () => {
   if (RequiredIPR === "Yes") {
     const fd = new FormData();
-    values.PatientId ? fd.append("PatientId", values.PatientId) : fd.append("PatientId", "null");
-    IPR ? fd.append("Name", IPR.name) : fd.append("Name", "null");
-    IPR ? fd.append("fileContent", IPR) : fd.append("fileContent", 0);
+
+    fd.append("PatientId", values.PatientId || "null");
+    fd.append("Name", IPR ? IPR.name : "null");
+    fd.append("fileContent", IPR || 0);
     fd.append("RequiredIPR", RequiredIPR);
-    axios
-      .post(
+
+    try {
+      const res = await axios.post(
         "https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/UploadDocuments",
         fd,
         {
           onUploadProgress: (ProgressEvent) => {
             console.log(
-              "Upload Progress:" +
-                Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) +
+              "Upload Progress: " +
+                Math.round(
+                  (ProgressEvent.loaded / ProgressEvent.total) * 100
+                ) +
                 "%"
             );
           },
         }
-      )
-      .then((res) => {
-        console.log(res);
-        if (res.data.status === true) {
-          Swal.fire({
-            icon: "success",
-            title: "IPR uploaded successfully!",
-          });
-        }
-      });
+      );
+
+      console.log(res);
+
+      if (res.data.status === true) {
+        Swal.fire({
+          icon: "success",
+          title: "IPR uploaded successfully!",
+        });
+      }
+
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
   } else {
-    const urlNo = `https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/UploadDocumentsNo`;
+    const urlNo =
+      "https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/UploadDocumentsNo";
+
     let n = {
       PatientId: values.PatientId,
-      RequiredIPR: RequiredIPR
+      RequiredIPR: RequiredIPR,
     };
-    fetch(urlNo, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(n),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        if (result.status === true) {
-          Swal.fire({
-            icon: "success",
-            title: "IPR status updated!",
-          });
-        }
+
+    try {
+      const res = await fetch(urlNo, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(n),
       });
+
+      const result = await res.json();
+
+      console.log(result);
+
+      if (result.status === true) {
+        Swal.fire({
+          icon: "success",
+          title: "IPR status updated!",
+        });
+      }
+
+      return result;
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 
@@ -1034,30 +1053,35 @@ const uploadHandlerIpr = (e) => {
     // }
     // console.log(vid);
 
-    const url =
-      "https://www.orthosquareportal.com/FlexismileApi/FlexAlign.svc/AddPatientRegistration";
+    const url1 =
+      "https://www.orthosquareportal.com/FlexismileApiNew/FlexAlign.svc/AddPatientPlan";
 
    
     setValues((pre)=>{
-      return{...pre,DoctorId:DoctorUserID}
-    })
-    setValues(pre=>{
       return{...pre,PatientId:patient[0]?.PatientId}
     })
 // console.log(values.DoctorId);
     let n = {
-      ...values,
-      // DoctorId:values.DoctorId,
-      PlanId: selectedPlan,
-      ClinicalConditions: values.ClinicalConditions.toString(),
-      DoNotMoveTheseTeeth: values.DoNotMoveTheseTeeth.toString(),
-      AvidEngagersAttachmentsOnTheseTeeth: values.AvidEngagersAttachmentsOnTheseTeeth.toString(),
-      IWillExtractTheseTeethBeforeTreatment:
-        values.IWillExtractTheseTeethBeforeTreatment.toString(),
-      LeaveTheseSpacesOpen: values.LeaveTheseSpacesOpen.toString(),
-      //ExtraOralMoreImages:values.ExtraOralMoreImages.toString(),
-      //IntraOralMoreImages:values.IntraOralMoreImages.toString(),
-      
+      PatientId: patient[0]?.PatientId,
+      planName: "Plan " + selectedPlan,
+      PortraitPath: values.PortraitPath,
+      TypeOfPVSScan: values.TypeOfPVSScan,
+      PathOfDoc: patient.PathOfDoc,
+      ProfileRepose: values.ProfileRepose,
+      FrontalRepose: values.FrontalRepose,
+      FrontalSmiling: values.FrontalSmiling,
+      FrontOpImage: values.FrontOpImage,
+      OcclussalUpper: values.OcclussalUpper,
+      OcclussalLower: values.OcclussalLower,
+      BuccalRight: values.BuccalRight,
+      BuccalFront: values.BuccalFront,
+      BuccalLeft: values.BuccalLeft,
+      ExtraOralMoreImages: values.ExtraOralMoreImages,
+      IntraOralMoreImages: values.IntraOralMoreImages,
+      RadiographsType: values.RadiographsType,
+      XrayLeft: values.XrayLeft,
+      XrayRight: values.XrayRight,
+      PathVideo: values.PathVideo
     };
 
    
@@ -1065,7 +1089,7 @@ const uploadHandlerIpr = (e) => {
 
     
 
-    await fetch(url, {
+    await fetch("/FlexismileApiNew/FlexAlign.svc/AddPatientPlan", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -1075,17 +1099,19 @@ const uploadHandlerIpr = (e) => {
     })
       .then((res) => res.json())
       .then((result) => {
+        uploadHandlerIpr();
         console.log("result :", result.message);
         if(form.checkValidity() === false){
           alert("Please go back and fill required fields marked with "*"")
         }
+        
         if (
           result.message === "Added Successful" &&
           form.checkValidity() === true
         ) {
           
           Swal.fire({
-            title: "Updated Successfully!",
+            title: "Plan Added Successfully!",
             // text: 'Do you want to continue',
             icon: "success",
             // confirmButtonText: 'Cool'
